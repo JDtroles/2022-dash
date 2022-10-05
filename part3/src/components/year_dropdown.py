@@ -1,13 +1,19 @@
+from typing import Protocol
 import i18n
 from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
 
-from ..data.source import DataSource
 from . import ids
 from .dropdown_helper import to_dropdown_options
 
 
-def render(app: Dash, source: DataSource) -> html.Div:
+class YearsDataSource(Protocol):
+    @property
+    def unique_years(self) -> list[str]:
+        ...
+
+
+def render(app: Dash, source: YearsDataSource) -> html.Div:
     @app.callback(
         Output(ids.YEAR_DROPDOWN, "value"),
         Input(ids.SELECT_ALL_YEARS_BUTTON, "n_clicks"),
